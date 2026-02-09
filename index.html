@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>To my princess❤️</title>
+<title>To my princess ❤️</title>
 
 <style>
 
@@ -13,23 +13,6 @@ body {
   color: white;
   overflow: hidden;
   background: linear-gradient(135deg, #7a0000, #c4002f);
-}
-
-/* ---------- GLOBAL IMAGE BG (hidden by default) ---------- */
-
-#finalBg {
-  position: fixed;
-  inset: 0;
-  background: url("bg.jpg") center/cover no-repeat;
-  display: none;
-  z-index: -1;
-}
-
-#finalBg::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: rgba(0,0,0,0.55);
 }
 
 /* ---------- Screens ---------- */
@@ -46,12 +29,15 @@ body {
 
 button {
   font-size: 22px;
-  padding: 15px 25px;
+  padding: 15px 28px;
   margin: 20px;
   border: none;
   border-radius: 12px;
   cursor: pointer;
+  transition: transform .15s;
 }
+
+button:hover { transform: scale(1.05); }
 
 .primary { background: #ff4d6d; color: white; }
 .gray { background: #777; color: white; }
@@ -65,7 +51,13 @@ button {
 /* ---------- Game ---------- */
 
 #gameArea { display: none; position: relative; width: 100vw; height: 100vh; }
-.heart { position: absolute; font-size: 34px; cursor: pointer; }
+
+.heart {
+  position: absolute;
+  font-size: 46px;
+  cursor: pointer;
+  user-select: none;
+}
 
 #scoreBox {
   position: fixed;
@@ -73,10 +65,43 @@ button {
   left: 50%;
   transform: translateX(-50%);
   font-size: 20px;
-  background: rgba(255,255,255,0.9);
+  background: rgba(255,255,255,0.95);
   color: black;
   padding: 10px 20px;
   border-radius: 12px;
+}
+
+/* ---------- Floating Hearts ---------- */
+
+.floatHeart {
+  position: fixed;
+  bottom: -40px;
+  font-size: 26px;
+  animation: floatUp 6s linear forwards;
+  pointer-events: none;
+}
+
+@keyframes floatUp {
+  to {
+    transform: translateY(-110vh);
+    opacity: 0;
+  }
+}
+
+/* ---------- Confetti ---------- */
+
+.confetti {
+  position: fixed;
+  width: 8px;
+  height: 8px;
+  top: -10px;
+  animation: confall 3s linear forwards;
+}
+
+@keyframes confall {
+  to {
+    transform: translateY(110vh) rotate(720deg);
+  }
 }
 
 /* ---------- Hidden Screens ---------- */
@@ -84,19 +109,20 @@ button {
 #caughtMsg { display: none; }
 #proposal { display: none; }
 
-.finalText h1,
-.finalText h2 {
-  color: #ffe6ea;
-  text-shadow: 0 4px 18px rgba(0,0,0,0.9);
+h1, h2 {
+  text-shadow: 0 4px 18px rgba(0,0,0,0.5);
+}
+
+#tease {
+  margin-top: 10px;
+  font-size: 18px;
+  opacity: .9;
 }
 
 </style>
 </head>
 
 <body>
-
-<!-- FINAL IMAGE BG -->
-<div id="finalBg"></div>
 
 <!-- START -->
 <div id="startScreen" class="screen">
@@ -122,7 +148,7 @@ button {
 </div>
 
 <!-- PROPOSAL -->
-<div id="proposal" class="screen finalText">
+<div id="proposal" class="screen">
   <h1>Final Question 💘</h1>
   <h2>Will you be my Valentine, princess?</h2>
 
@@ -130,6 +156,8 @@ button {
     <button class="primary" onclick="yes()">YES ❤️</button>
     <button id="noBtn" class="gray">NO 🙃</button>
   </div>
+
+  <div id="tease"></div>
 </div>
 
 <script>
@@ -137,10 +165,21 @@ let score = 0;
 const target = 6;
 let gameInterval;
 
+const teaseLines = [
+  "Nice try 😏",
+  "Nope nope nope 😂",
+  "That button is shy",
+  "It refuses rejection",
+  "Destiny says YES",
+  "Caught you 😄"
+];
+
+/* ---------- Game ---------- */
+
 function startGame() {
   document.getElementById("startScreen").style.display = "none";
   document.getElementById("gameArea").style.display = "block";
-  gameInterval = setInterval(spawnHeart, 700);
+  gameInterval = setInterval(spawnHeart, 650);
 }
 
 function spawnHeart() {
@@ -155,12 +194,12 @@ function spawnHeart() {
   document.getElementById("gameArea").appendChild(heart);
 
   let fall = setInterval(() => {
-    heart.style.top = (heart.offsetTop + 3) + "px";
+    heart.style.top = (heart.offsetTop + 4) + "px";
     if (heart.offsetTop > window.innerHeight) {
       heart.remove();
       clearInterval(fall);
     }
-  }, 20);
+  }, 18);
 
   heart.onclick = () => {
     score++;
@@ -168,10 +207,11 @@ function spawnHeart() {
       `Hearts caught: ${score} / ${target}`;
     heart.remove();
     clearInterval(fall);
-
     if (score >= target) showCaughtMessage();
   };
 }
+
+/* ---------- Flow ---------- */
 
 function showCaughtMessage() {
   clearInterval(gameInterval);
@@ -182,24 +222,55 @@ function showCaughtMessage() {
 function showProposal() {
   document.getElementById("caughtMsg").style.display = "none";
   document.getElementById("proposal").style.display = "flex";
-
-  /* turn on image background */
-  document.body.style.background = "none";
-  document.getElementById("finalBg").style.display = "block";
+  startFloatingHearts();
 
   const noBtn = document.getElementById("noBtn");
+  const tease = document.getElementById("tease");
 
   noBtn.onmouseover = () => {
     noBtn.style.position = "absolute";
     noBtn.style.left = Math.random() * 70 + "vw";
     noBtn.style.top = Math.random() * 70 + "vh";
+    tease.innerText =
+      teaseLines[Math.floor(Math.random()*teaseLines.length)];
   };
 }
 
+/* ---------- Floating Hearts ---------- */
+
+function startFloatingHearts() {
+  setInterval(() => {
+    const h = document.createElement("div");
+    h.className = "floatHeart";
+    h.innerHTML = "💗";
+    h.style.left = Math.random()*100 + "vw";
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(),6000);
+  }, 500);
+}
+
+/* ---------- Confetti ---------- */
+
+function confettiBurst() {
+  for(let i=0;i<120;i++){
+    const c = document.createElement("div");
+    c.className = "confetti";
+    c.style.left = Math.random()*100+"vw";
+    c.style.background =
+      ["#ff4d6d","#ffd166","#06d6a0","#118ab2","#ef476f"]
+      [Math.floor(Math.random()*5)];
+    c.style.animationDuration = (2+Math.random()*2)+"s";
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),4000);
+  }
+}
+
+/* ---------- YES ---------- */
+
 function yes() {
+  confettiBurst();
   document.body.innerHTML =
-    "<div id='finalBg' style='display:block'></div>" +
-    "<div class='screen finalText'><h1>YAYYY 😍</h1><h2>Best decision ever Megha 💝</h2></div>";
+    "<div class='screen'><h1>YAYYY 😍</h1><h2>Best decision ever Megha 💝</h2></div>";
 }
 </script>
 
