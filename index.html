@@ -15,8 +15,6 @@ body {
   background: linear-gradient(135deg, #7a0000, #c4002f);
 }
 
-/* ---------- Screens ---------- */
-
 .screen {
   height: 100vh;
   display: flex;
@@ -36,7 +34,6 @@ button {
   cursor: pointer;
   transition: transform .15s;
 }
-
 button:hover { transform: scale(1.05); }
 
 .primary { background: #ff4d6d; color: white; }
@@ -92,9 +89,10 @@ button:hover { transform: scale(1.05); }
 
 .confetti {
   position: fixed;
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
   top: -10px;
+  z-index: 9999;
   animation: confall 3s linear forwards;
 }
 
@@ -106,8 +104,7 @@ button:hover { transform: scale(1.05); }
 
 /* ---------- Hidden Screens ---------- */
 
-#caughtMsg { display: none; }
-#proposal { display: none; }
+#gameArea, #caughtMsg, #proposal, #finalYes { display: none; }
 
 h1, h2 {
   text-shadow: 0 4px 18px rgba(0,0,0,0.5);
@@ -160,6 +157,13 @@ h1, h2 {
   <div id="tease"></div>
 </div>
 
+<!-- FINAL YES SCREEN -->
+<div id="finalYes" class="screen">
+  <h1>YAYYY 😍</h1>
+  <h2>You made someone really happy!! 💝</h2>
+  <h2>Happy Valentine’s, my forever Valentine ❤️</h2>
+</div>
+
 <script>
 let score = 0;
 const target = 6;
@@ -169,11 +173,8 @@ const teaseLines = [
   "Nice try 😏",
   "Nope nope nope 😂",
   "That button is shy",
-  "It refuses rejection",
   "Destiny says YES",
-  "Caught you 😄",
   "Access denied 😂",
-  "The NO button is on leave",
   "Even the button ships us",
   "This is a YES-only zone",
 ];
@@ -181,8 +182,8 @@ const teaseLines = [
 /* ---------- Game ---------- */
 
 function startGame() {
-  document.getElementById("startScreen").style.display = "none";
-  document.getElementById("gameArea").style.display = "block";
+  startScreen.style.display = "none";
+  gameArea.style.display = "block";
   gameInterval = setInterval(spawnHeart, 650);
 }
 
@@ -192,49 +193,43 @@ function spawnHeart() {
   const heart = document.createElement("div");
   heart.className = "heart";
   heart.innerHTML = "💖";
-  heart.style.left = Math.random() * 95 + "vw";
+  heart.style.left = Math.random()*95 + "vw";
   heart.style.top = "-40px";
+  gameArea.appendChild(heart);
 
-  document.getElementById("gameArea").appendChild(heart);
-
-  let fall = setInterval(() => {
-    heart.style.top = (heart.offsetTop + 4) + "px";
-    if (heart.offsetTop > window.innerHeight) {
-      heart.remove();
-      clearInterval(fall);
+  let fall = setInterval(()=>{
+    heart.style.top = (heart.offsetTop+4)+"px";
+    if (heart.offsetTop > window.innerHeight){
+      heart.remove(); clearInterval(fall);
     }
-  }, 18);
+  },18);
 
   heart.onclick = () => {
     score++;
-    document.getElementById("scoreBox").innerText =
-      `Hearts caught: ${score} / ${target}`;
+    scoreBox.innerText = `Hearts caught: ${score} / ${target}`;
     heart.remove();
     clearInterval(fall);
-    if (score >= target) showCaughtMessage();
+    if(score>=target) showCaughtMessage();
   };
 }
 
 /* ---------- Flow ---------- */
 
-function showCaughtMessage() {
+function showCaughtMessage(){
   clearInterval(gameInterval);
-  document.getElementById("gameArea").style.display = "none";
-  document.getElementById("caughtMsg").style.display = "flex";
+  gameArea.style.display="none";
+  caughtMsg.style.display="flex";
 }
 
-function showProposal() {
-  document.getElementById("caughtMsg").style.display = "none";
-  document.getElementById("proposal").style.display = "flex";
+function showProposal(){
+  caughtMsg.style.display="none";
+  proposal.style.display="flex";
   startFloatingHearts();
 
-  const noBtn = document.getElementById("noBtn");
-  const tease = document.getElementById("tease");
-
-  noBtn.onmouseover = () => {
-    noBtn.style.position = "absolute";
-    noBtn.style.left = Math.random() * 70 + "vw";
-    noBtn.style.top = Math.random() * 70 + "vh";
+  noBtn.onmouseover = ()=>{
+    noBtn.style.position="absolute";
+    noBtn.style.left=Math.random()*70+"vw";
+    noBtn.style.top=Math.random()*70+"vh";
     tease.innerText =
       teaseLines[Math.floor(Math.random()*teaseLines.length)];
   };
@@ -242,28 +237,28 @@ function showProposal() {
 
 /* ---------- Floating Hearts ---------- */
 
-function startFloatingHearts() {
-  setInterval(() => {
-    const h = document.createElement("div");
-    h.className = "floatHeart";
-    h.innerHTML = "💗";
-    h.style.left = Math.random()*100 + "vw";
+function startFloatingHearts(){
+  setInterval(()=>{
+    const h=document.createElement("div");
+    h.className="floatHeart";
+    h.innerHTML="💗";
+    h.style.left=Math.random()*100+"vw";
     document.body.appendChild(h);
     setTimeout(()=>h.remove(),6000);
-  }, 500);
+  },500);
 }
 
 /* ---------- Confetti ---------- */
 
-function confettiBurst() {
-  for(let i=0;i<120;i++){
-    const c = document.createElement("div");
-    c.className = "confetti";
-    c.style.left = Math.random()*100+"vw";
-    c.style.background =
+function confettiBurst(){
+  for(let i=0;i<180;i++){
+    const c=document.createElement("div");
+    c.className="confetti";
+    c.style.left=Math.random()*100+"vw";
+    c.style.background=
       ["#ff4d6d","#ffd166","#06d6a0","#118ab2","#ef476f"]
       [Math.floor(Math.random()*5)];
-    c.style.animationDuration = (2+Math.random()*2)+"s";
+    c.style.animationDuration=(2+Math.random()*2)+"s";
     document.body.appendChild(c);
     setTimeout(()=>c.remove(),4000);
   }
@@ -271,10 +266,10 @@ function confettiBurst() {
 
 /* ---------- YES ---------- */
 
-function yes() {
+function yes(){
   confettiBurst();
-  document.body.innerHTML =
-    "<div class='screen'><h1>YAYYY 😍</h1><h2>You made someone really happy!! 💝</h2><h2>Happy Valentine’s, my forever Valentine ❤️</h2></div>";
+  proposal.style.display="none";
+  finalYes.style.display="flex";
 }
 </script>
 
