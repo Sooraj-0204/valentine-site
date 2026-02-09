@@ -15,28 +15,31 @@ body {
   background: linear-gradient(135deg, #7a0000, #c4002f);
 }
 
+/* ---------- GLOBAL IMAGE BG (hidden by default) ---------- */
+
+#finalBg {
+  position: fixed;
+  inset: 0;
+  background: url("bg.jpg") center/cover no-repeat;
+  display: none;
+  z-index: -1;
+}
+
+#finalBg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+}
+
+/* ---------- Screens ---------- */
+
 .screen {
   height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-}
-
-/* ---------- Background Image Layer (ONLY FINAL) ---------- */
-
-.bg {
-  position: fixed;
-  inset: 0;
-  background: url("bg.jpg") center/cover no-repeat;
-  z-index: -1;
-}
-
-.bg::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: rgba(0,0,0,0.55);
 }
 
 /* ---------- Buttons ---------- */
@@ -51,7 +54,13 @@ button {
 }
 
 .primary { background: #ff4d6d; color: white; }
-.gray { background: #777; color: white; position: absolute; }
+.gray { background: #777; color: white; }
+
+.buttonRow {
+  display: flex;
+  gap: 30px;
+  margin-top: 20px;
+}
 
 /* ---------- Game ---------- */
 
@@ -75,12 +84,6 @@ button {
 #caughtMsg { display: none; }
 #proposal { display: none; }
 
-/* ---------- Text polish ---------- */
-
-h1, h2 {
-  text-shadow: 0 3px 10px rgba(0,0,0,0.5);
-}
-
 .finalText h1,
 .finalText h2 {
   color: #ffe6ea;
@@ -91,6 +94,9 @@ h1, h2 {
 </head>
 
 <body>
+
+<!-- FINAL IMAGE BG -->
+<div id="finalBg"></div>
 
 <!-- START -->
 <div id="startScreen" class="screen">
@@ -107,7 +113,7 @@ h1, h2 {
   </div>
 </div>
 
-<!-- FUNNY MESSAGE -->
+<!-- MESSAGE -->
 <div id="caughtMsg" class="screen">
   <h1>Hold on 😄</h1>
   <h2>My heart already belongs to you…</h2>
@@ -115,13 +121,15 @@ h1, h2 {
   <button class="primary" onclick="showProposal()">Continue →</button>
 </div>
 
-<!-- PROPOSAL (FINAL IMAGE BG) -->
+<!-- PROPOSAL -->
 <div id="proposal" class="screen finalText">
-  <div class="bg"></div>
   <h1>Final Question 💘</h1>
   <h2>Will you be my Valentine, princess?</h2>
-  <button class="primary" onclick="yes()">YES ❤️</button>
-  <button id="noBtn" class="gray">NO 🙃</button>
+
+  <div class="buttonRow">
+    <button class="primary" onclick="yes()">YES ❤️</button>
+    <button id="noBtn" class="gray">NO 🙃</button>
+  </div>
 </div>
 
 <script>
@@ -175,8 +183,14 @@ function showProposal() {
   document.getElementById("caughtMsg").style.display = "none";
   document.getElementById("proposal").style.display = "flex";
 
+  /* turn on image background */
+  document.body.style.background = "none";
+  document.getElementById("finalBg").style.display = "block";
+
   const noBtn = document.getElementById("noBtn");
+
   noBtn.onmouseover = () => {
+    noBtn.style.position = "absolute";
     noBtn.style.left = Math.random() * 70 + "vw";
     noBtn.style.top = Math.random() * 70 + "vh";
   };
@@ -184,7 +198,8 @@ function showProposal() {
 
 function yes() {
   document.body.innerHTML =
-    "<div class='bg'></div><div class='screen finalText'><h1>YAYYY 😍</h1><h2>Best decision ever Megha 💝</h2></div>";
+    "<div id='finalBg' style='display:block'></div>" +
+    "<div class='screen finalText'><h1>YAYYY 😍</h1><h2>Best decision ever Megha 💝</h2></div>";
 }
 </script>
 
