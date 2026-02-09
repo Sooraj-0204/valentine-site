@@ -2,15 +2,32 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Special Mission ❤️</title>
+<title>To my princess❤️</title>
 
 <style>
+
 body {
   margin: 0;
   font-family: Arial, sans-serif;
   text-align: center;
-  background: linear-gradient(#ff9ec4, #ffd6e8);
+  color: white;
   overflow: hidden;
+}
+
+/* background image layer */
+.bg {
+  position: fixed;
+  inset: 0;
+  background: url("bg.jpg") center/cover no-repeat;
+  z-index: -1;
+}
+
+/* dark overlay so text is readable */
+.bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
 }
 
 .screen {
@@ -36,54 +53,62 @@ button {
 
 /* game */
 #gameArea { display: none; position: relative; width: 100vw; height: 100vh; }
-.heart { position: absolute; font-size: 30px; cursor: pointer; }
+.heart { position: absolute; font-size: 34px; cursor: pointer; }
 
 #scoreBox {
   position: fixed;
-  top: 10px;
-  left: 10px;
+  top: 15px;
+  left: 50%;
+  transform: translateX(-50%);
   font-size: 20px;
-  background: white;
-  padding: 10px 15px;
-  border-radius: 10px;
+  background: rgba(255,255,255,0.9);
+  color: black;
+  padding: 10px 20px;
+  border-radius: 12px;
 }
 
-/* message screen */
+/* hidden screens */
 #caughtMsg { display: none; }
-
-/* proposal */
 #proposal { display: none; }
+
+h1, h2 {
+  text-shadow: 0 3px 10px rgba(0,0,0,0.6);
+}
 
 </style>
 </head>
 
 <body>
 
-<!-- START SCREEN -->
+<div class="bg"></div>
+
+<!-- START -->
 <div id="startScreen" class="screen">
-  <h1>Hi Megha G!! 😄</h1>
-  <h2>You up for a little action? 💥</h2>
+  <h1>Hey there princess 😄</h1>
+  <h2>You up for a little action?</h2>
   <button class="primary" onclick="startGame()">START MISSION ❤️</button>
 </div>
 
 <!-- GAME -->
 <div id="gameArea">
   <div id="scoreBox">Hearts caught: 0 / 6</div>
-  <h2 style="margin-top:20px;">Catch the hearts before they escape 💖</h2>
+  <div class="screen">
+    <h2>Catch the hearts before they escape 💖</h2>
+  </div>
 </div>
 
 <!-- FUNNY MESSAGE -->
 <div id="caughtMsg" class="screen">
-  <h1>WAIT 😄</h1>
-  <h2>You already have my heart…</h2>
+  <h1>Hold on 😄</h1>
+  <h2>My heart already belongs to you…</h2>
   <h2>but thanks for catching more 💖</h2>
   <button class="primary" onclick="showProposal()">Continue →</button>
 </div>
 
 <!-- PROPOSAL -->
 <div id="proposal" class="screen">
-  <h1>Final Question Time 💘</h1>
-  <h2>Will you be my Valentine?</h2>
+  <h1>Final Question 💘</h1>
+  <h2>Will you be my Valentine, princess?</h2>
   <button class="primary" onclick="yes()">YES ❤️</button>
   <button id="noBtn" class="gray">NO 🙃</button>
 </div>
@@ -93,15 +118,11 @@ let score = 0;
 const target = 6;
 let gameInterval;
 
-/* ---------- Start Game ---------- */
-
 function startGame() {
   document.getElementById("startScreen").style.display = "none";
   document.getElementById("gameArea").style.display = "block";
   gameInterval = setInterval(spawnHeart, 700);
 }
-
-/* ---------- Heart Game ---------- */
 
 function spawnHeart() {
   if (score >= target) return;
@@ -133,15 +154,11 @@ function spawnHeart() {
   };
 }
 
-/* ---------- Funny Message ---------- */
-
 function showCaughtMessage() {
   clearInterval(gameInterval);
   document.getElementById("gameArea").style.display = "none";
   document.getElementById("caughtMsg").style.display = "flex";
 }
-
-/* ---------- Proposal ---------- */
 
 function showProposal() {
   document.getElementById("caughtMsg").style.display = "none";
@@ -154,11 +171,9 @@ function showProposal() {
   };
 }
 
-/* ---------- YES ---------- */
-
 function yes() {
   document.body.innerHTML =
-    "<h1 style='margin-top:200px'>YAYYY 😍 Best decision ever!! Happy Valentine Megha 💝</h1>";
+    "<div class='bg'></div><div class='screen'><h1>YAYYY 😍</h1><h2>Best decision ever Megha 💝</h2></div>";
 }
 </script>
 
