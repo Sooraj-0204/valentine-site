@@ -2,22 +2,41 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Important Mission ❤️</title>
+<title>Special Mission ❤️</title>
 
 <style>
 body {
   margin: 0;
-  overflow: hidden;
   font-family: Arial, sans-serif;
-  background: linear-gradient(#ff9ec4, #ffd6e8);
   text-align: center;
+  background: linear-gradient(#ff9ec4, #ffd6e8);
+  overflow: hidden;
 }
 
-h1 {
-  margin-top: 20px;
+/* ---------- Start Screen ---------- */
+
+#startScreen {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
+
+#startBtn {
+  font-size: 22px;
+  padding: 15px 25px;
+  border: none;
+  border-radius: 12px;
+  background: #ff4d6d;
+  color: white;
+  cursor: pointer;
+}
+
+/* ---------- Game ---------- */
 
 #gameArea {
+  display: none;
   position: relative;
   width: 100vw;
   height: 100vh;
@@ -39,6 +58,8 @@ h1 {
   border-radius: 10px;
 }
 
+/* ---------- Proposal ---------- */
+
 #proposal {
   display: none;
   margin-top: 120px;
@@ -54,27 +75,48 @@ button {
 }
 
 #yesBtn { background: #ff4d6d; color: white; }
-#noBtn { background: #999; color: white; position: absolute; }
+#noBtn { background: #777; color: white; position: absolute; }
 
 </style>
 </head>
 
 <body>
 
-<div id="gameArea">
-  <div id="scoreBox">Hearts caught: 0 / 7</div>
-  <h1>Catch the hearts to unlock something special 💖</h1>
+<!-- START PAGE -->
+<div id="startScreen">
+  <h1>Hi Megha G!! 😄</h1>
+  <h2>You up for a little action? 💥</h2>
+  <button id="startBtn" onclick="startGame()">START MISSION ❤️</button>
 </div>
 
+<!-- GAME -->
+<div id="gameArea">
+  <div id="scoreBox">Hearts caught: 0 / 6</div>
+  <h2>Catch the hearts before they escape 💖</h2>
+</div>
+
+<!-- PROPOSAL -->
 <div id="proposal">
-  <h1>Will you be my Valentine? 💘</h1>
+  <h1>Mission Completed 🎉</h1>
+  <h2>Will you be my Valentine? 💘</h2>
   <button id="yesBtn" onclick="yes()">YES ❤️</button>
   <button id="noBtn">NO 🙃</button>
 </div>
 
 <script>
 let score = 0;
-const target = 7;
+const target = 6;
+let gameInterval;
+
+/* ---------- Start Game ---------- */
+
+function startGame() {
+  document.getElementById("startScreen").style.display = "none";
+  document.getElementById("gameArea").style.display = "block";
+  gameInterval = setInterval(spawnHeart, 700);
+}
+
+/* ---------- Heart Game ---------- */
 
 function spawnHeart() {
   if (score >= target) return;
@@ -106,9 +148,10 @@ function spawnHeart() {
   };
 }
 
-setInterval(spawnHeart, 700);
+/* ---------- Proposal Screen ---------- */
 
 function showProposal() {
+  clearInterval(gameInterval);
   document.getElementById("gameArea").style.display = "none";
   document.getElementById("proposal").style.display = "block";
 
@@ -119,9 +162,11 @@ function showProposal() {
   };
 }
 
+/* ---------- YES Button ---------- */
+
 function yes() {
   document.body.innerHTML =
-    "<h1 style='margin-top:200px'>YAYYY 😍 You just made my day! Happy Valentine 💝</h1>";
+    "<h1 style='margin-top:200px'>YAYYY 😍 Best decision ever!! Happy Valentine Megha 💝</h1>";
 }
 </script>
 
