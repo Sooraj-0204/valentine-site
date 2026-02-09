@@ -12,22 +12,7 @@ body {
   text-align: center;
   color: white;
   overflow: hidden;
-}
-
-/* background image layer */
-.bg {
-  position: fixed;
-  inset: 0;
-  background: url("bg.jpg") center/cover no-repeat;
-  z-index: -1;
-}
-
-/* dark overlay so text is readable */
-.bg::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: rgba(0,0,0,0.45);
+  background: linear-gradient(135deg, #7a0000, #c4002f);
 }
 
 .screen {
@@ -38,7 +23,24 @@ body {
   align-items: center;
 }
 
-/* buttons */
+/* ---------- Background Image Layer (ONLY FINAL) ---------- */
+
+.bg {
+  position: fixed;
+  inset: 0;
+  background: url("bg.jpg") center/cover no-repeat;
+  z-index: -1;
+}
+
+.bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+}
+
+/* ---------- Buttons ---------- */
+
 button {
   font-size: 22px;
   padding: 15px 25px;
@@ -51,7 +53,8 @@ button {
 .primary { background: #ff4d6d; color: white; }
 .gray { background: #777; color: white; position: absolute; }
 
-/* game */
+/* ---------- Game ---------- */
+
 #gameArea { display: none; position: relative; width: 100vw; height: 100vh; }
 .heart { position: absolute; font-size: 34px; cursor: pointer; }
 
@@ -67,20 +70,27 @@ button {
   border-radius: 12px;
 }
 
-/* hidden screens */
+/* ---------- Hidden Screens ---------- */
+
 #caughtMsg { display: none; }
 #proposal { display: none; }
 
+/* ---------- Text polish ---------- */
+
 h1, h2 {
-  text-shadow: 0 3px 10px rgba(0,0,0,0.6);
+  text-shadow: 0 3px 10px rgba(0,0,0,0.5);
+}
+
+.finalText h1,
+.finalText h2 {
+  color: #ffe6ea;
+  text-shadow: 0 4px 18px rgba(0,0,0,0.9);
 }
 
 </style>
 </head>
 
 <body>
-
-<div class="bg"></div>
 
 <!-- START -->
 <div id="startScreen" class="screen">
@@ -105,8 +115,9 @@ h1, h2 {
   <button class="primary" onclick="showProposal()">Continue →</button>
 </div>
 
-<!-- PROPOSAL -->
-<div id="proposal" class="screen">
+<!-- PROPOSAL (FINAL IMAGE BG) -->
+<div id="proposal" class="screen finalText">
+  <div class="bg"></div>
   <h1>Final Question 💘</h1>
   <h2>Will you be my Valentine, princess?</h2>
   <button class="primary" onclick="yes()">YES ❤️</button>
@@ -173,7 +184,7 @@ function showProposal() {
 
 function yes() {
   document.body.innerHTML =
-    "<div class='bg'></div><div class='screen'><h1>YAYYY 😍</h1><h2>Best decision ever Megha 💝</h2></div>";
+    "<div class='bg'></div><div class='screen finalText'><h1>YAYYY 😍</h1><h2>Best decision ever Megha 💝</h2></div>";
 }
 </script>
 
