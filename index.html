@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Important Mission ❤️</title>
+
+<style>
+body {
+  margin: 0;
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(#ff9ec4, #ffd6e8);
+  text-align: center;
+}
+
+h1 {
+  margin-top: 20px;
+}
+
+#gameArea {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+}
+
+.heart {
+  position: absolute;
+  font-size: 30px;
+  cursor: pointer;
+}
+
+#scoreBox {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  font-size: 20px;
+  background: white;
+  padding: 10px 15px;
+  border-radius: 10px;
+}
+
+#proposal {
+  display: none;
+  margin-top: 120px;
+}
+
+button {
+  font-size: 22px;
+  padding: 15px 25px;
+  margin: 20px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+#yesBtn { background: #ff4d6d; color: white; }
+#noBtn { background: #999; color: white; position: absolute; }
+
+</style>
+</head>
+
+<body>
+
+<div id="gameArea">
+  <div id="scoreBox">Hearts caught: 0 / 7</div>
+  <h1>Catch the hearts to unlock something special 💖</h1>
+</div>
+
+<div id="proposal">
+  <h1>Will you be my Valentine? 💘</h1>
+  <button id="yesBtn" onclick="yes()">YES ❤️</button>
+  <button id="noBtn">NO 🙃</button>
+</div>
+
+<script>
+let score = 0;
+const target = 7;
+
+function spawnHeart() {
+  if (score >= target) return;
+
+  const heart = document.createElement("div");
+  heart.className = "heart";
+  heart.innerHTML = "💖";
+  heart.style.left = Math.random() * 95 + "vw";
+  heart.style.top = "-40px";
+
+  document.getElementById("gameArea").appendChild(heart);
+
+  let fall = setInterval(() => {
+    heart.style.top = (heart.offsetTop + 3) + "px";
+    if (heart.offsetTop > window.innerHeight) {
+      heart.remove();
+      clearInterval(fall);
+    }
+  }, 20);
+
+  heart.onclick = () => {
+    score++;
+    document.getElementById("scoreBox").innerText =
+      `Hearts caught: ${score} / ${target}`;
+    heart.remove();
+    clearInterval(fall);
+
+    if (score >= target) showProposal();
+  };
+}
+
+setInterval(spawnHeart, 700);
+
+function showProposal() {
+  document.getElementById("gameArea").style.display = "none";
+  document.getElementById("proposal").style.display = "block";
+
+  const noBtn = document.getElementById("noBtn");
+  noBtn.onmouseover = () => {
+    noBtn.style.left = Math.random() * 70 + "vw";
+    noBtn.style.top = Math.random() * 70 + "vh";
+  };
+}
+
+function yes() {
+  document.body.innerHTML =
+    "<h1 style='margin-top:200px'>YAYYY 😍 You just made my day! Happy Valentine 💝</h1>";
+}
+</script>
+
+</body>
+</html>
