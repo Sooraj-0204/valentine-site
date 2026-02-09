@@ -13,9 +13,7 @@ body {
   overflow: hidden;
 }
 
-/* ---------- Start Screen ---------- */
-
-#startScreen {
+.screen {
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -23,30 +21,22 @@ body {
   align-items: center;
 }
 
-#startBtn {
+/* buttons */
+button {
   font-size: 22px;
   padding: 15px 25px;
+  margin: 20px;
   border: none;
   border-radius: 12px;
-  background: #ff4d6d;
-  color: white;
   cursor: pointer;
 }
 
-/* ---------- Game ---------- */
+.primary { background: #ff4d6d; color: white; }
+.gray { background: #777; color: white; position: absolute; }
 
-#gameArea {
-  display: none;
-  position: relative;
-  width: 100vw;
-  height: 100vh;
-}
-
-.heart {
-  position: absolute;
-  font-size: 30px;
-  cursor: pointer;
-}
+/* game */
+#gameArea { display: none; position: relative; width: 100vw; height: 100vh; }
+.heart { position: absolute; font-size: 30px; cursor: pointer; }
 
 #scoreBox {
   position: fixed;
@@ -58,49 +48,44 @@ body {
   border-radius: 10px;
 }
 
-/* ---------- Proposal ---------- */
+/* message screen */
+#caughtMsg { display: none; }
 
-#proposal {
-  display: none;
-  margin-top: 120px;
-}
-
-button {
-  font-size: 22px;
-  padding: 15px 25px;
-  margin: 20px;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-}
-
-#yesBtn { background: #ff4d6d; color: white; }
-#noBtn { background: #777; color: white; position: absolute; }
+/* proposal */
+#proposal { display: none; }
 
 </style>
 </head>
 
 <body>
 
-<!-- START PAGE -->
-<div id="startScreen">
+<!-- START SCREEN -->
+<div id="startScreen" class="screen">
   <h1>Hi Megha G!! 😄</h1>
   <h2>You up for a little action? 💥</h2>
-  <button id="startBtn" onclick="startGame()">START MISSION ❤️</button>
+  <button class="primary" onclick="startGame()">START MISSION ❤️</button>
 </div>
 
 <!-- GAME -->
 <div id="gameArea">
   <div id="scoreBox">Hearts caught: 0 / 6</div>
-  <h2>Catch the hearts before they escape 💖</h2>
+  <h2 style="margin-top:20px;">Catch the hearts before they escape 💖</h2>
+</div>
+
+<!-- FUNNY MESSAGE -->
+<div id="caughtMsg" class="screen">
+  <h1>WAIT 😄</h1>
+  <h2>You already have my heart…</h2>
+  <h2>but thanks for catching more 💖</h2>
+  <button class="primary" onclick="showProposal()">Continue →</button>
 </div>
 
 <!-- PROPOSAL -->
-<div id="proposal">
-  <h1>Mission Completed 🎉</h1>
-  <h2>Will you be my Valentine? 💘</h2>
-  <button id="yesBtn" onclick="yes()">YES ❤️</button>
-  <button id="noBtn">NO 🙃</button>
+<div id="proposal" class="screen">
+  <h1>Final Question Time 💘</h1>
+  <h2>Will you be my Valentine?</h2>
+  <button class="primary" onclick="yes()">YES ❤️</button>
+  <button id="noBtn" class="gray">NO 🙃</button>
 </div>
 
 <script>
@@ -144,16 +129,23 @@ function spawnHeart() {
     heart.remove();
     clearInterval(fall);
 
-    if (score >= target) showProposal();
+    if (score >= target) showCaughtMessage();
   };
 }
 
-/* ---------- Proposal Screen ---------- */
+/* ---------- Funny Message ---------- */
 
-function showProposal() {
+function showCaughtMessage() {
   clearInterval(gameInterval);
   document.getElementById("gameArea").style.display = "none";
-  document.getElementById("proposal").style.display = "block";
+  document.getElementById("caughtMsg").style.display = "flex";
+}
+
+/* ---------- Proposal ---------- */
+
+function showProposal() {
+  document.getElementById("caughtMsg").style.display = "none";
+  document.getElementById("proposal").style.display = "flex";
 
   const noBtn = document.getElementById("noBtn");
   noBtn.onmouseover = () => {
@@ -162,7 +154,7 @@ function showProposal() {
   };
 }
 
-/* ---------- YES Button ---------- */
+/* ---------- YES ---------- */
 
 function yes() {
   document.body.innerHTML =
